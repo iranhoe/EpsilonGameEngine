@@ -41,6 +41,13 @@ Map::Map()
 	dest.h = 32;
 }
 
+Map::~Map()
+{
+	SDL_DestroyTexture(grass);
+	SDL_DestroyTexture(water);
+	SDL_DestroyTexture(dirt);
+}
+
 void Map::DrawMap()
 {
 	int type = 0;

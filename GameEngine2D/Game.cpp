@@ -11,11 +11,14 @@
 #include "Map.h"
 #include "Components.h"
 #include "Vector2D.h"
+#include "Collision.h"
 
 Map* map;
 SDL_Renderer* Game::renderer = nullptr;
+SDL_Event Game::event;
 Manager manager;
 auto& player(manager.addEntity());
+auto& wall(manager.addEntity());
 
 Game::Game()
 {
@@ -70,8 +73,14 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	}
 
 	map = new Map();
-	player.addComponent<TransformComponent>();
+	player.addComponent<TransformComponent>(2);
+	player.addComponent<KeyboardController>();
 	player.addComponent<SpriteComponent>("Assets/Sprites/Player.png");
+	player.addComponent<ColliderComponent>();
+
+	wall.addComponent<TransformComponent>(300.0f, 300.0f, 300, 20, 1);
+	wall.addComponent<SpriteComponent>("Assets/Background/dirt.png");
+	wall.addComponent<ColliderComponent>();
 }
 
 /**
@@ -79,7 +88,6 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 */
 void Game::handleEvents()
 {
-	SDL_Event event;
 	SDL_PollEvent(&event);
 	switch (event.type)
 	{
@@ -98,12 +106,13 @@ void Game::update()
 {
 	manager.refresh();
 	manager.update();
-	player.getComponent<TransformComponent>().position.Add(Vector2D(5, 0));
-	if (player.getComponent<TransformComponent>().position.x > 100)
-	{
-		player.getComponent<SpriteComponent>().setTexture("Assets/Sprites/enemy.png");
+
+	ColliderComponent pCollider = player.getComponent<ColliderComponent>();
+	ColliderComponent wCollider = wall.getComponent<ColliderComponent>();
+	if (Collision::AABB(pCollider.collider, wCollider.collider))
+	{ 
+		std::cout << "Wall Hit!" << std::endl;
 	}
-	TransformComponent playComponent = player.getComponent<TransformComponent>();
 }
 
 /**
