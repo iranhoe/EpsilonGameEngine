@@ -2,6 +2,7 @@
 #include "Components.h"
 #include "SDL.h"
 #include "TextureManager.h"
+#include <map>
 
 class SpriteComponent : public Component
 {
@@ -11,10 +12,20 @@ private:
 	SDL_Rect srcRect, destRect;
 
 public:
+	std::map<int, int> animations;
+	int speed = 0;
+	int frames = 1;
+	int index = 0;
+
+
 	SpriteComponent() = default;
 	SpriteComponent(const char* path)
 	{
 		setTexture(path);
+		animations[1] = 1;
+		animations[2] = 2;
+
+		Play(1);
 	}
 	~SpriteComponent()
 	{
@@ -48,5 +59,11 @@ public:
 	void draw() override
 	{
 		TextureManager::Draw(texture, srcRect, destRect);
+	}
+
+	void Play(int animName)
+	{
+		frames = animations[animName];
+		std::cout << frames << std::endl;
 	}
 };
