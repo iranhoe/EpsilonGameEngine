@@ -16,8 +16,10 @@
 Map* map;
 SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
+SDL_Rect Game::camera = { 0,0, 800, 640 };
 Manager manager;
 std::vector<ColliderComponent*> Game::colliders;
+bool Game::isRunning = false;
 auto& player(manager.addEntity());
 auto& wall(manager.addEntity());
 const char* mapFile = "Assets/Tiles/terrain_ss.png";
@@ -29,6 +31,10 @@ enum groupLables : std::size_t
 	groupEnemies,
 	groupColliders
 };
+
+auto& tiles(manager.getGroup(groupMap));
+auto& players(manager.getGroup(groupPlayers));
+auto& enemies(manager.getGroup(groupEnemies));
 
 Game::Game()
 {
@@ -115,15 +121,26 @@ void Game::update()
 {
 	manager.refresh();
 	manager.update();
-	for (auto cc : colliders)
+	camera.x = player.getComponent<TransformComponent>().position.x - 400;
+	camera.y = player.getComponent<TransformComponent>().position.y - 320;
+
+	if (camera.x < 0)
 	{
-		Collision::AABB(player.getComponent<ColliderComponent>(), *cc);
+		camera.x = 0;
+	}
+	if (camera.y < 0)
+	{
+		camera.y = 0;
+	}
+	if (camera.x > camera.w)
+	{
+		camera.x = camera.w;
+	}
+	if (camera.y > camera.h)
+	{
+		camera.y = camera.h;
 	}
 }
-
-auto& tiles(manager.getGroup(groupMap));
-auto& players(manager.getGroup(groupPlayers));
-auto& enemies(manager.getGroup(groupEnemies));
 
 /**
 

@@ -19,7 +19,8 @@ public:
 
 	TransformComponent(int scl)
 	{
-		position.Zero();
+		position.x = 400;
+		position.y = 320;
 		scale = scl;
 	}
 
