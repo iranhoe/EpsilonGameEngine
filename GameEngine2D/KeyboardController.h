@@ -23,7 +23,7 @@ public:
 			{
 			case SDLK_w:
 				transform->velocity.y = -1;
-				sprite->Play(2);
+				sprite->Play("Walk");
 				break;
 			case SDLK_a:
 				transform->velocity.x = -1;
