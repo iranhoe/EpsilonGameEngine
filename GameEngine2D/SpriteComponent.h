@@ -14,7 +14,6 @@ private:
 	bool animated = false;	
 	int speed = 0;
 	int frames = 1;
-	int index = 0;
 
 public:
 	int animIndex = 0;
@@ -87,6 +86,6 @@ public:
 	{
 		frames = animations[animName].frames;
 		speed = animations[animName].speed;
-		index = animations[animName].index;
+		animIndex = animations[animName].index;
 	}
 };
