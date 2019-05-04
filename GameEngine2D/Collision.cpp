@@ -13,7 +13,6 @@
  {
 	 if (AABB(colA.collider, colB.collider))
 	 {
-		 std::cout << colA.tag << " hit: " << colB.tag << std::endl;
 		 return true;
 	 }
 
