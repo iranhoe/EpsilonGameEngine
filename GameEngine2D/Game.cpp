@@ -12,12 +12,14 @@
 #include "Components.h"
 #include "Vector2D.h"
 #include "Collision.h"
+#include "AssetManager.h"
 
 Map* map;
+Manager manager;
+AssetManager* Game::assets = new AssetManager(&manager);
 SDL_Renderer* Game::renderer = nullptr;
 SDL_Event Game::event;
 SDL_Rect Game::camera = { 0, 0, 800, 640 };
-Manager manager;
 bool Game::isRunning = false;
 auto& player(manager.addEntity());
 
@@ -73,18 +75,28 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = false;
 	}
 
-	map = new Map("Assets/Tiles/terrain_ss.png", 3, 32);
+	assets->AddTexture("terrain", "Assets/Tiles/terrain_ss.png");
+	assets->AddTexture("player", "Assets/Sprites/Player_Anims.png");
+	assets->AddTexture("projectile", "Assets/Sprites/proj.png");
+
+	map = new Map("terrain", 3, 32);
 	map->LoadMap("Assets/Maps/map.map", 25, 20);
 	player.addComponent<TransformComponent>(800.0f, 640.0f, 32, 32, 4);
-	player.addComponent<SpriteComponent>("Assets/Sprites/Player_Anims.png", true);
+	player.addComponent<SpriteComponent>("player", true);
 	player.addComponent<KeyboardController>();
 	player.addComponent<ColliderComponent>("player");
 	player.addGroup(groupPlayers);
+
+	assets->CreateProjectile(Vector2D(600, 600), Vector2D(2, 0), 200, 2, "projectile");
+	assets->CreateProjectile(Vector2D(600, 620), Vector2D(2, 0), 200, 2, "projectile");
+	assets->CreateProjectile(Vector2D(400, 600), Vector2D(2, 1), 200, 2, "projectile");
+	assets->CreateProjectile(Vector2D(600, 600), Vector2D(2, -1), 200, 2, "projectile");
 }
 
 auto& tiles(manager.getGroup(Game::groupMap));
 auto& players(manager.getGroup(Game::groupPlayers));
 auto& colliders(manager.getGroup(Game::groupColliders));
+auto& projectiles(manager.getGroup(Game::groupProjectiles));
 
 /**
 	handle the user events
@@ -122,6 +134,15 @@ void Game::update()
 		}
 	}
 
+	for (auto& p : projectiles)
+	{
+		if (Collision::AABB(player.getComponent<ColliderComponent>().collider, 
+			p->getComponent<ColliderComponent>().collider))
+		{
+			p->destroy();
+		}
+	}
+
 	camera.x = player.getComponent<TransformComponent>().position.x - 400;
 	camera.y = player.getComponent<TransformComponent>().position.y - 320;
 
@@ -143,6 +164,11 @@ void Game::render()
 	}
 
 	for (auto& p : players)
+	{
+		p->draw();
+	}
+
+	for (auto& p : projectiles)
 	{
 		p->draw();
 	}

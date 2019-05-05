@@ -6,7 +6,7 @@
 
 extern Manager manager;
 
-Map::Map(const char* mfp, int ms, int ts) : mapFilePath(mfp), mapScale(ms), tileSize(ts)
+Map::Map(std::string tID, int ms, int ts) : texID(tID), mapScale(ms), tileSize(ts)
 {
 	scaledSize = ms * ts;
 }
@@ -17,7 +17,7 @@ Map::~Map()
 
 void Map::LoadMap(std::string path, int sizeX, int sizeY)
 {
-	char tile;
+	char c;
 	std::fstream mapFile;
 	mapFile.open(path);
 
@@ -27,10 +27,10 @@ void Map::LoadMap(std::string path, int sizeX, int sizeY)
 	{
 		for (int x = 0; x < sizeX; x++)
 		{
-			mapFile.get(tile);
-			srcY = atoi(&tile) * tileSize;
-			mapFile.get(tile);
-			srcX = atoi(&tile) * tileSize;
+			mapFile.get(c);
+			srcY = atoi(&c) * tileSize;
+			mapFile.get(c);
+			srcX = atoi(&c) * tileSize;
 			AddTile(srcX, srcY, x * scaledSize, y * scaledSize);
 			mapFile.ignore();
 		}
@@ -42,8 +42,8 @@ void Map::LoadMap(std::string path, int sizeX, int sizeY)
 	{
 		for (int x = 0; x < sizeX; x++)
 		{
-			mapFile.get(tile);
-			if (tile == '1')
+			mapFile.get(c);
+			if (c == '1')
 			{
 				auto& tcol(manager.addEntity());
 				tcol.addComponent<ColliderComponent>("terrain", x * scaledSize, y * scaledSize, scaledSize);
@@ -59,6 +59,6 @@ void Map::LoadMap(std::string path, int sizeX, int sizeY)
 void Map::AddTile(int srcX, int srcY, int xpos, int ypos)
 {
 	auto& tile(manager.addEntity());
-	tile.addComponent<TileComponent>(srcX, srcY, xpos, ypos, tileSize, mapScale, mapFilePath);
+	tile.addComponent<TileComponent>(srcX, srcY, xpos, ypos, tileSize, mapScale, texID);
 	tile.addGroup(Game::groupMap);
 }
