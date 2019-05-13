@@ -20,11 +20,8 @@ public:
 	void handleEvents();
 	void update();
 	void render();
-	void clean();
-	bool running() const { return isRunning; };
 
 	static SDL_Event event;
-	static bool isRunning;
 	static SDL_Rect camera;
 	static AssetManager* assets;
 	enum groupLables : std::size_t

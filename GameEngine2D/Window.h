@@ -9,7 +9,6 @@ public:
 	~Window();
 
 	void pollEvents(SDL_Event& event);
-	void render() const;
 	inline bool isClosed() const { return _closed; }
 	static SDL_Renderer* renderer;
 

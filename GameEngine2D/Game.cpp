@@ -20,14 +20,12 @@ Manager manager;
 AssetManager* Game::assets = new AssetManager(&manager);
 SDL_Event Game::event;
 SDL_Rect Game::camera = { 0, 0, 800, 640 };
-bool Game::isRunning = false;
 auto& player(manager.addEntity());
 
 Game::Game(Window &window)
 {
 	gameWindow = &window;
 	Game::cnt = 0;
-	Game::isRunning = false;
 }
 
 Game::~Game()
@@ -47,8 +45,6 @@ Game::~Game()
 */
 void Game::init()
 {
-	isRunning = true;
-
 	assets->AddTexture("terrain", "Assets/Tiles/terrain_ss.png");
 	assets->AddTexture("player", "Assets/Sprites/Player_Anims.png");
 	assets->AddTexture("projectile", "Assets/Sprites/proj.png");
@@ -126,23 +122,22 @@ void Game::update()
 */
 void Game::render()
 {
-	gameWindow->render();
-	/*SDL_RenderClear(Window::renderer);
-	for (auto& t : tiles)
+	SDL_RenderClear(Window::renderer);
+	for (Entity* t : tiles)
 	{
 		t->draw();
 	}
 
-	for (auto& p : players)
+	for (Entity* p : players)
 	{
 		p->draw();
 	}
 
-	for (auto& p : projectiles)
+	for (Entity* p : projectiles)
 	{
 		p->draw();
 	}
 
-	SDL_RenderPresent(Window::renderer);*/
+	SDL_RenderPresent(Window::renderer);
 }
 

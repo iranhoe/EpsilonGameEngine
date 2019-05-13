@@ -20,38 +20,11 @@ Window::~Window()
 
 void Window::pollEvents(SDL_Event &event)
 {
-	switch (event.type)
+	if (event.type == SDL_QUIT)
 	{
-	case SDL_QUIT:
 		std::cout << "Event close" << std::endl;
 		_closed = true;
-		break;
-	case SDL_KEYDOWN:
-		switch (event.key.keysym.sym) {
-		case SDLK_a:
-			std::cout << "You clicked \'A\'" << std::endl;
-			break;
-		}
-		break;
-	case SDL_MOUSEMOTION:
-		std::cout << event.motion.x << ", " << event.motion.y << std::endl;
-		break;
-	case SDL_MOUSEBUTTONDOWN:
-		std::cout << "You clicked a button on you mouse" << std::endl;
-		break;
-	case SDL_MOUSEBUTTONUP:
-		std::cout << "You release a button on you mouse" << std::endl;
-		break;
-	default:
-		break;
 	}
-}
-
-void Window::render() const
-{
-	SDL_SetRenderDrawColor(renderer, 0, 0, 200, 255);
-	SDL_RenderPresent(renderer);
-	SDL_RenderClear(renderer);
 }
 
 bool Window::init()
