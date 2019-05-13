@@ -5,6 +5,7 @@
 #include <map>
 #include "Animation.h"
 #include "AssetManager.h"
+#include "Game.h"
 
 class SpriteComponent : public Component
 {

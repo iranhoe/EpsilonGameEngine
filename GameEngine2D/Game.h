@@ -1,9 +1,11 @@
 #pragma once
 #include "SDL.h"
 #include "SDL_image.h"
+#include "AssetManager.h"
+#include "Window.h"
 #include <iostream>
 #include <vector>
-#include "AssetManager.h"
+#include <string>
 
 class AssetManager;
 class ColliderComponent;
@@ -11,17 +13,16 @@ class ColliderComponent;
 class Game
 {
 public:
-	Game();
+	Game(Window& window);
 	~Game();
 
-	void init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen);
+	void init();
 	void handleEvents();
 	void update();
 	void render();
 	void clean();
-	bool running() { return isRunning; };
+	bool running() const { return isRunning; };
 
-	static SDL_Renderer* renderer;
 	static SDL_Event event;
 	static bool isRunning;
 	static SDL_Rect camera;
@@ -36,6 +37,6 @@ public:
 
 private:
 	int cnt;	
-	SDL_Window* window;
+	Window *gameWindow = nullptr;
 };
 
